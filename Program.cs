@@ -71,6 +71,11 @@ namespace ConsoleApplicationCSV
                 Table table = new Table();
                 table.Borders.Width = 0.75;
 
+                //Table table2 = new Table();
+                //table2.Borders.Width = 0.75;
+                //Column column2 = table2.AddColumn(Unit.FromCentimeter(3));
+                //column2.Format.Alignment = ParagraphAlignment.Center;
+
                 Column column = table.AddColumn(Unit.FromCentimeter(3));    //1st column
                 column.Format.Alignment = ParagraphAlignment.Center;
                 
@@ -114,7 +119,7 @@ namespace ConsoleApplicationCSV
                 
                 #region loops
                 
-                    for (int j = 1; j < 10; j++)
+                    for (int j = 12; j < 21; j++)
                     {
 
 
@@ -130,13 +135,13 @@ namespace ConsoleApplicationCSV
                             
                         table.AddRow();
                             
-                            table.Rows[j].Cells[0].AddParagraph(j.ToString());
-                            table.Rows[j].Cells[1].AddParagraph(csv[3]);
-                            table.Rows[j].Cells[2].AddParagraph(csv[4]);
-                            table.Rows[j].Cells[3].AddParagraph(csv[5]);
-                            table.Rows[j].Cells[4].AddParagraph(csv[6]);
-                            table.Rows[j].Cells[5].AddParagraph(csv[7]);
-                            table.Rows[j].Cells[6].AddParagraph(csv[8]);
+                            table.Rows[j - 11].Cells[0].AddParagraph((j-11).ToString());
+                            table.Rows[j - 11].Cells[1].AddParagraph(csv[3]);
+                            table.Rows[j - 11].Cells[2].AddParagraph(csv[4]);
+                            table.Rows[j - 11].Cells[3].AddParagraph(csv[5]);
+                            table.Rows[j - 11].Cells[4].AddParagraph(csv[6]);
+                            table.Rows[j - 11].Cells[5].AddParagraph(csv[7]);
+                            table.Rows[j - 11].Cells[6].AddParagraph(csv[8]);
       
 
                     }
@@ -315,6 +320,54 @@ namespace ConsoleApplicationCSV
                 pdfRenderer.RenderDocument();
                 string filename = "HelloWorld5.pdf";
                 pdfRenderer.PdfDocument.Save(filename);
+
+                //PdfDocument inputDocument1 = PdfReader.Open("HelloWorld4.pdf", PdfDocumentOpenMode.Import);
+                //PdfDocument inputDocument2 = PdfReader.Open("HelloWorld5.pdf", PdfDocumentOpenMode.Import);
+
+                //PdfDocument outputDocument = new PdfDocument();
+
+                // Show consecutive pages facing. Requires Acrobat 5 or higher.
+                //outputDocument.PageLayout = PdfPageLayout.TwoColumnLeft;
+
+                //// Iterate pages
+                //int count = inputDocument.PageCount;
+                //for (int idx = 0; idx < count; idx++)
+                //{
+                //    // Get the page from the external document...
+                //    PdfPage page = inputDocument.Pages[idx];
+                //    // ...and add it to the output document.
+                //    outputDocument.AddPage(page);
+                //}
+
+                // Get some file names
+                //string[] files = GetFiles();
+                string[] files = { "Sample_12_50000.pdf", "HelloWorld5.pdf" };
+
+                // Open the output document
+                PdfDocument outputDocument = new PdfDocument();
+
+                // Iterate files
+                foreach (string file in files)
+                {
+                    // Open the document to import pages from it.
+                    PdfDocument inputDocument = PdfReader.Open(file, PdfDocumentOpenMode.Import);
+
+                    // Iterate pages
+                    int count = inputDocument.PageCount;
+                    for (int idx = 0; idx < count; idx++)
+                    {
+                        // Get the page from the external document...
+                        PdfPage page = inputDocument.Pages[idx];
+                        // ...and add it to the output document.
+                        outputDocument.AddPage(page);
+                    }
+                }
+
+                // Save the document...
+                const string filenameCombined = "ConcatenatedDocument1_tempfile.pdf";
+                outputDocument.Save(filenameCombined);
+                // ...and start a viewer.
+                //Process.Start(filename);
 
             }
 
